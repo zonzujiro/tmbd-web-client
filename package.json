@@ -18,8 +18,16 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "lint": "eslint ./ --cache --ignore-pattern .gitignore",
+    "prettify": "prettier --write --tab-width 4 --trailing-comma es5 --single-quote \"src/**/*.js\"",
+    "prepush-msg": "echo 'Pre-push tasks...' && exit 0"
   },
+  "pre-push": [
+    "precommit-msg",
+    "prettify",
+    "lint"
+  ],
   "devDependencies": {
     "babel-eslint": "^7.2.3",
     "eslint": "^4.1.1",
@@ -29,6 +37,7 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
     "flow-bin": "^0.74.0",
+    "pre-push": "^0.1.1",
     "prettier": "1.13.5"
   }
 }
