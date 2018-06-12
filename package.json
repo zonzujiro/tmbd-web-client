@@ -24,7 +24,7 @@
     "prepush-msg": "echo 'Pre-push tasks...' && exit 0"
   },
   "pre-push": [
-    "precommit-msg",
+    "prepush-msg",
     "prettify",
     "lint"
   ],
