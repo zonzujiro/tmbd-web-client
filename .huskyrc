@@ -1,0 +1,5 @@
+{
+  "hooks": {
+    "pre-push": "echo 'husky: Running pre-push tasks...' && npm run prettify && npm run lint"
+  }
+}
