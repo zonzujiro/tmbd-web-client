@@ -20,7 +20,7 @@
     "eject": "react-scripts eject",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "lint": "eslint ./ --cache --ignore-pattern .gitignore",
-    "prettify": "prettier --write --tab-width 4 --trailing-comma es5 --single-quote \"src/**/*.js\"",
+    "prettify": "prettier --write --tab-width 2 --trailing-comma es5 --single-quote \"src/**/*.js\"",
     "prepush-msg": "echo 'Pre-push tasks...' && exit 0"
   },
   "pre-push": [
