@@ -32,6 +32,7 @@
     "eslint-plugin-react": "^7.1.0",
     "flow-bin": "^0.74.0",
     "husky": "^1.0.0-rc.8",
-    "prettier": "1.13.5"
+    "prettier": "1.13.5",
+    "redux-devtools-extension": "^2.13.2"
   }
 }
