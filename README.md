@@ -3,6 +3,8 @@ The learning project for Kottans. React with CRA, Redux, reselect, lodash/fp
 
 Web client for [The Movie Database](https://www.themoviedb.org/documentation/api?language=en)
 
+Just look how beautiful [the app](https://zonzujiro.github.io/tmbd-web-client/) is!
+
 MVP functionality:
 
 1. As a user, I want to see the list of popular movies with dynamic loading
