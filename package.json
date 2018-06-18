@@ -20,7 +20,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
-    "lint": "eslint ./ --cache --ignore-pattern .gitignore",
+    "lint": "eslint ./src/ --cache --ignore-pattern .gitignore",
     "prettify": "prettier --write --tab-width 2 --trailing-comma es5 --single-quote \"src/**/*.js\""
   },
   "devDependencies": {
