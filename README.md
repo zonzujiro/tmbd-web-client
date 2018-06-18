@@ -16,3 +16,16 @@ MVP functionality:
 3. I want to see result while I typing the search request
 4. As a user, I want to open a page with all information about a movie, like related movies, genres, etc.
 5. As a user, I want to have the list of my favorites movies
+
+# Installation and developing
+To install project run:
+
+`yarn`
+
+To start dev server:
+
+`yarn start`
+
+To run tests:
+
+`yarn test`
