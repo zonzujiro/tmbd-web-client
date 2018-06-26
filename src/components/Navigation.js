@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -21,7 +21,7 @@ const styles = {
 const routes = [
   { path: '/actor', title: 'Actor page' },
   { path: '/movie', title: 'Movie page' },
-  { path: '/list',  title: 'List of movies' }
+  { path: '/list', title: 'List of movies' },
 ];
 
 const NavLink = props => <Link {...props} />;
@@ -37,15 +37,25 @@ class Navigation extends Component {
               <div>
                 <AppBar position="static">
                   <Toolbar>
-                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                    <IconButton
+                      className={classes.menuButton}
+                      color="inherit"
+                      aria-label="Menu"
+                    >
                       <MenuIcon />
                     </IconButton>
-                    <Typography variant="title" color="inherit" className={classes.flex}>
+                    <Typography
+                      variant="title"
+                      color="inherit"
+                      className={classes.flex}
+                    >
                       TMDB
                     </Typography>
                     <nav>
                       <ul className="navigation-menu">
-                        { routes.map((route, idx) => this.renderRouteLinkListItem(idx, route)) }
+                        {routes.map((route, idx) =>
+                          this.renderRouteLinkListItem(idx, route)
+                        )}
                       </ul>
                     </nav>
                   </Toolbar>
@@ -63,7 +73,11 @@ class Navigation extends Component {
 
   renderRouteLinkListItem(idx, route) {
     return (
-      <li key={idx}><Button color="inherit" component={NavLink} to={route.path}>{route.title}</Button></li>
+      <li key={idx}>
+        <Button color="inherit" component={NavLink} to={route.path}>
+          {route.title}
+        </Button>
+      </li>
     );
   }
 }
