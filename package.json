@@ -26,7 +26,7 @@
     "prettify": "prettier --write --tab-width 2 --trailing-comma es5 --single-quote \"src/**/*.js\""
   },
   "devDependencies": {
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "^8.2.5",
     "eslint": "^4.1.1",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.34.1",
