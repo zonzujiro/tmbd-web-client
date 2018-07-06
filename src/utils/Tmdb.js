@@ -216,7 +216,7 @@ class Tmdb {
    * @param {Object} [searchParams] -
    *        {key0:value0, key1:value1}, will transform into ?key0=value0&key1=value1,
    *        keys and values are URL encoded for safety and consistency
-   * @returns {string}
+   * @returns {URL}
    * @private
    */
   _makeGetUrl(
