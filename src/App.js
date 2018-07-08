@@ -1,10 +1,15 @@
 /* @flow */
 import React, { Component } from 'react';
-import './App.css';
+import 'App.css';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Navigation from './components/Navigation';
+import Navigation from 'components/Navigation';
+import 'url-search-params-polyfill';
 
-class App extends Component {
+type Props = {};
+
+type State = {};
+
+class App extends Component<Props, State> {
   render() {
     return (
       <div className="App">
