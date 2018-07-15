@@ -20,10 +20,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "test:ci": "flow && react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "lint": "eslint ./src/ --cache --ignore-pattern .gitignore",
-    "prettify": "prettier --write --tab-width 2 --trailing-comma es5 --single-quote \"src/**/*.js\""
+    "prettify": "prettier --write --tab-width 2 --trailing-comma es5 --single-quote \"src/**/*.js\"",
+    "install:ci": "yarn && flow-typed install"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.5",
@@ -37,6 +39,7 @@
     "husky": "^1.0.0-rc.8",
     "prettier": "1.13.5",
     "redux-devtools-extension": "^2.13.2",
-    "url-search-params-polyfill": "^4.0.0"
+    "url-search-params-polyfill": "^4.0.0",
+    "flow-typed": "^2.5.1"
   }
 }
