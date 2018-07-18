@@ -1,6 +1,6 @@
 /* @flow */
 import api from 'utils/Tmdb.js';
-
+import Dispatch from 'types/types';
 const initialState = {
   data: [],
   isLoaded: false,
@@ -12,6 +12,7 @@ const MOVIE_LOADED = 'MOVIE_LOADED';
 const MOVIE_ERROR = 'MOVIE_ERROR';
 
 //TODO: add some concrete types for the state and for actions.
+
 export default function reducer(state: Object = initialState, action: Object) {
   let newState;
   switch (action.type) {
@@ -37,7 +38,7 @@ export function handleErrors(error: Object) {
 
 export function movies(value: string | number) {
   if (value) {
-    return async dispatch => {
+    return async (dispatch: Dispatch) => {
       try {
         const searchParams = {
           query: value,
@@ -49,9 +50,10 @@ export function movies(value: string | number) {
       }
     };
   } else {
-    return async dispatch => {
+    return async (dispatch: Dispatch) => {
       try {
         const movies = await api.discoverMovie();
+        console.log(movies);
         return dispatch(receiveMovies(movies.results));
       } catch (error) {
         dispatch(handleErrors(error));

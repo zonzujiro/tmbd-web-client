@@ -19,6 +19,12 @@ const styles = {
   },
 };
 
+type Props = {
+  classes: Object,
+};
+
+type State = {};
+
 const routes = [
   { path: '/', title: 'Main page' },
   { path: '/actor', title: 'Actor page' },
@@ -28,49 +34,45 @@ const routes = [
 
 const NavLink = props => <Link {...props} />;
 
-class Navigation extends Component {
+class Navigation extends Component<Props, State> {
   render() {
     const { classes } = this.props;
     return (
-      <div className="App">
-        <Router>
-          <Fragment>
-            <header>
-              <div>
-                <AppBar position="static">
-                  <Toolbar>
-                    <IconButton
-                      className={classes.menuButton}
-                      color="inherit"
-                      aria-label="Menu"
-                    >
-                      <MenuIcon />
-                    </IconButton>
-                    <Typography
-                      variant="title"
-                      color="inherit"
-                      className={classes.flex}
-                    >
-                      TMDB
-                    </Typography>
-                    <nav>
-                      <ul className="navigation-menu">
-                        {routes.map((route, idx) =>
-                          this.renderRouteLinkListItem(idx, route)
-                        )}
-                      </ul>
-                    </nav>
-                  </Toolbar>
-                </AppBar>
-              </div>
-            </header>
-            <Route exact path="/" component={MainPage} />
-            <Route exact path="/actor" component={ActorPage} />
-            <Route exact path="/movie" component={MoviePage} />
-            <Route exact path="/list" component={MoviesList} />
-          </Fragment>
-        </Router>
-      </div>
+      <Router>
+        <Fragment>
+          <div>
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="Menu"
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Typography
+                  variant="title"
+                  color="inherit"
+                  className={classes.flex}
+                >
+                  TMDB
+                </Typography>
+                <nav>
+                  <ul className="navigation-menu">
+                    {routes.map((route, idx) =>
+                      this.renderRouteLinkListItem(idx, route)
+                    )}
+                  </ul>
+                </nav>
+              </Toolbar>
+            </AppBar>
+          </div>
+          <Route exact path="/" component={MainPage} />
+          <Route exact path="/actor" component={ActorPage} />
+          <Route exact path="/movie" component={MoviePage} />
+          <Route exact path="/list" component={MoviesList} />
+        </Fragment>
+      </Router>
     );
   }
 

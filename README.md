@@ -18,9 +18,9 @@ MVP functionality:
 5. As a user, I want to have the list of my favorites movies
 
 # Installation and developing
-To install project run:
+To install project - run:
 
-`yarn`
+`yarn install:ci`
 
 To start dev server:
 
@@ -28,4 +28,4 @@ To start dev server:
 
 To run tests:
 
-`yarn test`
+`yarn test:ci`

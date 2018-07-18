@@ -26,7 +26,7 @@ class Tmdb {
    * @param {Object} searchParams - see query() for details
    * @returns {Promise<Response>} - see query() for details
    */
-  discoverMovie(searchParams?: Object = {}): Promise<Response> {
+  discoverMovie(searchParams?: Object = {}): Promise<Object> {
     return this.query('discover/movie', [], searchParams);
   }
 
@@ -68,7 +68,7 @@ class Tmdb {
       | 'person'
       | 'tv',
     searchParams?: Object = {}
-  ): Promise<Response> {
+  ): Promise<Object> {
     return this.query('search', [resource], searchParams);
   }
 
