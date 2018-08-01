@@ -53,7 +53,7 @@ export function movies(value: string | number) {
     return async (dispatch: Dispatch) => {
       try {
         const movies = await api.discoverMovie();
-        console.log(movies);
+        console.log( await api.discoverMovie());
         return dispatch(receiveMovies(movies.results));
       } catch (error) {
         dispatch(handleErrors(error));

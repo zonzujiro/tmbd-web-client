@@ -10,13 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import ArrowBack from '@material-ui/icons/ArrowBack';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ArrowForward from '@material-ui/icons/ArrowForward';
 import DeleteIcon from '@material-ui/icons/Delete';
 import 'App.css';
+
+import Pagination from "./Pagination";
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -152,6 +150,13 @@ class MainPage extends Component<Props, State> {
                         >
                           IMDB score: {item.vote_average}
                         </Typography>
+                        <Typography
+                            gutterBottom
+                            variant="headline"
+                            component="h4"
+                        >
+                          Release date: {item.release_date}
+                        </Typography>
                       </CardContent>
                       <CardActions>
                         <IconButton
@@ -179,19 +184,7 @@ class MainPage extends Component<Props, State> {
             </Grid>
           </Grid>
           <Grid>
-            <BottomNavigation
-              value="recents"
-              onChange={this.handleBottomNavigationChange}
-              className={classes.bottomNav}
-            >
-              <BottomNavigationAction label="back" icon={<ArrowBack />} />
-              <BottomNavigationAction
-                label="Favorites"
-                onClick={this.openListOfFavorites}
-                icon={<FavoriteIcon />}
-              />
-              <BottomNavigationAction label="forward" icon={<ArrowForward />} />
-            </BottomNavigation>
+            {/*<Pagination/>*/}
           </Grid>
         </main>
       );
