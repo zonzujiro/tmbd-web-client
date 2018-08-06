@@ -28,7 +28,7 @@ export default function reducer(state: Object = initialState, action: Object) {
   }
 }
 
-export function receiveMovies(json: Array<number | string> = []) {
+export function receiveMovies(json: Object) {
   return { type: MOVIE_LOADED, data: json, isLoaded: true };
 }
 
@@ -36,15 +36,16 @@ export function handleErrors(error: Object) {
   return { type: MOVIE_ERROR, data: error, isLoaded: false };
 }
 
-export function movies(value: string | number) {
+export function movies(value: string | number, page: number) {
   if (value) {
     return async (dispatch: Dispatch) => {
       try {
         const searchParams = {
           query: value,
+          page: page,
         };
         const movies = await api.searchAmong('multi', searchParams);
-        return dispatch(receiveMovies(movies.results));
+        return dispatch(receiveMovies(movies));
       } catch (error) {
         dispatch(handleErrors(error));
       }
@@ -52,9 +53,11 @@ export function movies(value: string | number) {
   } else {
     return async (dispatch: Dispatch) => {
       try {
-        const movies = await api.discoverMovie();
-        console.log( await api.discoverMovie());
-        return dispatch(receiveMovies(movies.results));
+        const searchParams = {
+          page: page,
+        };
+        const movies = await api.discoverMovie(searchParams);
+        return dispatch(receiveMovies(movies));
       } catch (error) {
         dispatch(handleErrors(error));
       }

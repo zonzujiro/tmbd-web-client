@@ -12,9 +12,8 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Pagination from "react-js-pagination";
 import 'App.css';
-
-import Pagination from "./Pagination";
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -58,11 +57,16 @@ type Props = {
 type State = {
   inputValue: number | string,
   favorites: Array<number>,
+  activePage: number
 };
 
 class MainPage extends Component<Props, State> {
+  state = {
+    activePage: 1
+  };
+
   componentDidMount() {
-    this.props.getMovies.movies();
+    this.props.getMovies.movies(null, 1);
   }
 
   handleSearchChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -71,34 +75,26 @@ class MainPage extends Component<Props, State> {
 
   handleSubmit = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.preventDefault();
-    this.props.getMovies.movies(this.state.inputValue);
+    this.props.getMovies.movies(this.state.inputValue, this.state.activePage);
+    console.log('handleSubmit')
   };
 
-  //TODO: add functionality to handle list of favorites movies and bottom navigation
-  handleBottomNavigationChange = (
-    event: SyntheticInputEvent<HTMLInputElement>
-  ) => {
-    event.preventDefault();
-    console.log('handleBottomNavigationChange');
-  };
-
-  openListOfFavorites = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    console.log('openListOfFavorites');
-  };
-
-  addMovieToListOfFavorites = () => {
-    console.log('addMovieToListOfFavorites');
-  };
-
-  deleteMovieFromFavorites = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    console.log('deleteMovieFromFavorites');
+  handlePageChange = (pageNumber) => {
+    console.log(`active page is ${pageNumber}`);
+    const value = this.state.inputValue;
+    if (value) {
+      this.setState({activePage: pageNumber});
+      this.props.getMovies.movies(value, pageNumber);
+    } else {
+      this.setState({activePage: pageNumber});
+      this.props.getMovies.movies(null, pageNumber);
+    }
   };
 
   render() {
     const { classes, data, error } = this.props;
     const poster = 'https://image.tmdb.org/t/p/w500';
+    const { total_pages } = data.data;
 
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -125,7 +121,7 @@ class MainPage extends Component<Props, State> {
                 justify="center"
                 spacing={8}
               >
-                {data.data.map(item => (
+                {data.data.results.map(item => (
                   <Grid key={item.id} item>
                     <Card className={classes.card}>
                       <CardMedia
@@ -181,10 +177,20 @@ class MainPage extends Component<Props, State> {
                   </Grid>
                 ))}
               </Grid>
+              <Grid>
+                <Pagination
+                    prevPageText='prev'
+                    nextPageText='next'
+                    firstPageText='first'
+                    lastPageText='last'
+                    activePage={this.state.activePage}
+                    itemsCountPerPage={10}
+                    totalItemsCount={total_pages}
+                    pageRangeDisplayed={5}
+                    onChange={this.handlePageChange}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid>
-            {/*<Pagination/>*/}
           </Grid>
         </main>
       );
