@@ -12,7 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Pagination from "react-js-pagination";
+import Pagination from 'react-js-pagination';
 import 'App.css';
 
 import { connect } from 'react-redux';
@@ -57,12 +57,12 @@ type Props = {
 type State = {
   inputValue: number | string,
   favorites: Array<number>,
-  activePage: number
+  activePage: number,
 };
 
 class MainPage extends Component<Props, State> {
   state = {
-    activePage: 1
+    activePage: 1,
   };
 
   componentDidMount() {
@@ -76,17 +76,17 @@ class MainPage extends Component<Props, State> {
   handleSubmit = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.preventDefault();
     this.props.getMovies.movies(this.state.inputValue, this.state.activePage);
-    console.log('handleSubmit')
+    console.log('handleSubmit');
   };
 
-  handlePageChange = (pageNumber) => {
+  handlePageChange = pageNumber => {
     console.log(`active page is ${pageNumber}`);
     const value = this.state.inputValue;
     if (value) {
-      this.setState({activePage: pageNumber});
+      this.setState({ activePage: pageNumber });
       this.props.getMovies.movies(value, pageNumber);
     } else {
-      this.setState({activePage: pageNumber});
+      this.setState({ activePage: pageNumber });
       this.props.getMovies.movies(null, pageNumber);
     }
   };
@@ -147,9 +147,9 @@ class MainPage extends Component<Props, State> {
                           IMDB score: {item.vote_average}
                         </Typography>
                         <Typography
-                            gutterBottom
-                            variant="headline"
-                            component="h4"
+                          gutterBottom
+                          variant="headline"
+                          component="h4"
                         >
                           Release date: {item.release_date}
                         </Typography>
@@ -179,15 +179,15 @@ class MainPage extends Component<Props, State> {
               </Grid>
               <Grid>
                 <Pagination
-                    prevPageText='prev'
-                    nextPageText='next'
-                    firstPageText='first'
-                    lastPageText='last'
-                    activePage={this.state.activePage}
-                    itemsCountPerPage={10}
-                    totalItemsCount={total_pages}
-                    pageRangeDisplayed={5}
-                    onChange={this.handlePageChange}
+                  prevPageText="prev"
+                  nextPageText="next"
+                  firstPageText="first"
+                  lastPageText="last"
+                  activePage={this.state.activePage}
+                  itemsCountPerPage={10}
+                  totalItemsCount={total_pages}
+                  pageRangeDisplayed={5}
+                  onChange={this.handlePageChange}
                 />
               </Grid>
             </Grid>
