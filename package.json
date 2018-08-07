@@ -23,7 +23,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "test:ci": "flow && react-scripts test --env=jsdom",
+    "test:ci": "flow && react-scripts test --env=jsdom jest",
     "eject": "react-scripts eject",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "lint": "eslint ./src/ --cache --ignore-pattern .gitignore",
