@@ -56,31 +56,27 @@ type Props = {
 
 type State = {
   inputValue: number | string,
-  favorites: Array<number>,
   activePage: number,
 };
 
 class MainPage extends Component<Props, State> {
-  state = {
-    activePage: 1,
-  };
-
   componentDidMount() {
     this.props.getMovies.movies(null, 1);
+    this.setState({ activePage: 1 });
+    this.setState({ favorites: [] });
   }
 
   handleSearchChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ inputValue: event.target.value });
+    this.setState({ activePage: 1 });
   };
 
   handleSubmit = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.preventDefault();
     this.props.getMovies.movies(this.state.inputValue, this.state.activePage);
-    console.log('handleSubmit');
   };
 
   handlePageChange = pageNumber => {
-    console.log(`active page is ${pageNumber}`);
     const value = this.state.inputValue;
     if (value) {
       this.setState({ activePage: pageNumber });
@@ -88,6 +84,24 @@ class MainPage extends Component<Props, State> {
     } else {
       this.setState({ activePage: pageNumber });
       this.props.getMovies.movies(null, pageNumber);
+    }
+  };
+
+  addMovieToListOfFavorites = id => {
+    let duplicate = this.state.favorites.find(function(element) {
+      return element === id;
+    });
+    if (!duplicate) {
+      this.state.favorites.push(id);
+      localStorage.setItem('favorites', this.state.favorites);
+    }
+  };
+
+  deleteMovieFromFavorites = id => {
+    let itemToRemove = this.state.favorites.indexOf(id);
+    if (itemToRemove > -1) {
+      this.state.favorites.splice(itemToRemove, 1);
+      localStorage.setItem('favorites', this.state.favorites);
     }
   };
 
@@ -158,17 +172,22 @@ class MainPage extends Component<Props, State> {
                         <IconButton
                           className={classes.button}
                           aria-label="Delete"
-                          disabled
                           color="primary"
-                          onClick={this.deleteMovieFromFavorites}
+                          onClick={this.deleteMovieFromFavorites.bind(
+                            this,
+                            item.id
+                          )}
                         >
                           <DeleteIcon />
                         </IconButton>
                         <IconButton
                           className={classes.button}
                           aria-label="Favorite"
-                          value={item.id}
-                          onClick={this.addMovieToListOfFavorites}
+                          id={item.id}
+                          onClick={this.addMovieToListOfFavorites.bind(
+                            this,
+                            item.id
+                          )}
                         >
                           <FavoriteIcon />
                         </IconButton>
