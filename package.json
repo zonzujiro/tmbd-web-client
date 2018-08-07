@@ -28,7 +28,10 @@
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "lint": "eslint ./src/ --cache --ignore-pattern .gitignore",
     "prettify": "prettier --write --tab-width 2 --trailing-comma es5 --single-quote \"src/**/*.js\"",
-    "install:ci": "yarn && flow-typed install"
+    "install:ci": "yarn && flow-typed install",
+    "jest": {
+      "setupFiles":["browserMocks.js"]
+    }
   },
   "devDependencies": {
     "babel-eslint": "^8.2.5",
