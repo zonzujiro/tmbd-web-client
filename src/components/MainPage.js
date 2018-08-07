@@ -64,7 +64,7 @@ class MainPage extends Component<Props, State> {
   componentDidMount() {
     this.props.getMovies.movies(null, 1);
     this.setState({ activePage: 1 });
-    this.setState({ favorites: [] });
+    localStorage.setItem('favorites', 'init');
   }
 
   handleSearchChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -89,20 +89,30 @@ class MainPage extends Component<Props, State> {
   };
 
   addMovieToListOfFavorites = id => {
-    let duplicate = this.state.favorites.find(function(element) {
-      return element === id;
-    });
-    if (!duplicate) {
-      this.state.favorites.push(id);
-      localStorage.setItem('favorites', this.state.favorites);
+    let favorites = localStorage.getItem('favorites');
+    if (favorites) {
+      let res = favorites.split(',');
+      let duplicate = res.find(function(element) {
+        return element === id.toString();
+      });
+      if (!duplicate) {
+        res.push(id.toString());
+        let favToString = res.join(',');
+        localStorage.setItem('favorites', favToString);
+      }
     }
   };
 
   deleteMovieFromFavorites = id => {
-    let itemToRemove = this.state.favorites.indexOf(id);
-    if (itemToRemove > -1) {
-      this.state.favorites.splice(itemToRemove, 1);
-      localStorage.setItem('favorites', this.state.favorites);
+    let favorites = localStorage.getItem('favorites');
+    if (favorites) {
+      let res = favorites.split(',');
+      let itemToRemove = res.indexOf(id.toString());
+      if (itemToRemove > -1) {
+        res.splice(itemToRemove, 1);
+        let favToString = res.join(',');
+        localStorage.setItem('favorites', favToString);
+      }
     }
   };
 
