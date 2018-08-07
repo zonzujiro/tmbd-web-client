@@ -57,6 +57,7 @@ type Props = {
 type State = {
   inputValue: number | string,
   activePage: number,
+  favorites: Array<number>
 };
 
 class MainPage extends Component<Props, State> {
