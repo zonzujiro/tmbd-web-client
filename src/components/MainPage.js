@@ -15,7 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import Pagination from 'react-js-pagination';
 import { createBrowserHistory } from 'history';
-import queryString from 'query-string';
+import queryString from 'querystring';
 import _ from 'lodash/fp';
 import 'App.css';
 
