@@ -12,7 +12,11 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Button from '@material-ui/core/Button';
 import Pagination from 'react-js-pagination';
+import { createBrowserHistory } from 'history';
+import queryString from 'query-string';
+import _ from 'lodash/fp';
 import 'App.css';
 
 import { connect } from 'react-redux';
@@ -48,10 +52,11 @@ const styles = () => ({
 
 type Props = {
   getMovies: Object,
-  data: Object,
+  fetchedDataBundle: Object,
   classes: Object,
   error: Object,
   dispatch: Dispatch,
+  location: string,
 };
 
 type State = {
@@ -62,68 +67,84 @@ type State = {
 
 class MainPage extends Component<Props, State> {
   componentDidMount() {
-    this.props.getMovies.movies(null, 1);
-    this.setState({ activePage: 1 });
-    localStorage.setItem('favorites', 'init');
+    const urlParamsValues = queryString.parse(this.props.location.search);
+    this.setState({ activePage: urlParamsValues.page || 1 });
+    this.props.getMovies.movies(
+      null,
+      urlParamsValues.page || 1,
+      'popularity.desc'
+    );
+    const favorites = localStorage.getItem('favorites') || JSON.stringify([]);
+    localStorage.setItem('favorites', favorites);
   }
 
   handleSearchChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ inputValue: event.target.value });
-    this.setState({ activePage: 1 });
+    this.setState({
+      inputValue: event.target.value,
+      activePage: 1,
+    });
   };
 
   handleSubmit = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.preventDefault();
-    this.props.getMovies.movies(this.state.inputValue, this.state.activePage);
+    const urlParamsValues = queryString.parse(this.props.location.search);
+    this.setState({ activePage: urlParamsValues.page });
+    this.props.getMovies.movies(
+      this.state.inputValue,
+      urlParamsValues.page || this.state.activePage,
+      'popularity.desc'
+    );
   };
 
-  handlePageChange = pageNumber => {
-    const value = this.state.inputValue;
-    if (value) {
-      this.setState({ activePage: pageNumber });
-      this.props.getMovies.movies(value, pageNumber);
-    } else {
-      this.setState({ activePage: pageNumber });
-      this.props.getMovies.movies(null, pageNumber);
-    }
+  handlePageChange = (pageNumber: number) => {
+    const { inputValue } = this.state;
+    const value = inputValue || null;
+    this.setState({ activePage: pageNumber });
+    this.props.getMovies.movies(value, pageNumber);
+    const history = createBrowserHistory({ basename: '/' });
+    history.push(`?page=${pageNumber}`);
   };
 
-  addMovieToListOfFavorites = id => {
-    let favorites = localStorage.getItem('favorites');
+  addMovieToListOfFavorites = (id: number) => {
+    const favorites = localStorage.getItem('favorites');
     if (favorites) {
-      let res = favorites.split(',');
-      let duplicate = res.find(function(element) {
-        return element === id.toString();
-      });
-      if (!duplicate) {
-        res.push(id.toString());
-        let favToString = res.join(',');
+      const parsedFavorites = JSON.parse(favorites);
+      const duplicate = _.find(e => e === id, parsedFavorites);
+      if (duplicate !== id) {
+        parsedFavorites.push(id);
+        const favToString = JSON.stringify(parsedFavorites);
         localStorage.setItem('favorites', favToString);
       }
     }
   };
 
-  deleteMovieFromFavorites = id => {
+  deleteMovieFromFavorites = (id: number) => {
     let favorites = localStorage.getItem('favorites');
     if (favorites) {
-      let res = favorites.split(',');
-      let itemToRemove = res.indexOf(id.toString());
-      if (itemToRemove > -1) {
-        res.splice(itemToRemove, 1);
-        let favToString = res.join(',');
-        localStorage.setItem('favorites', favToString);
-      }
+      const parsedFavorites = JSON.parse(favorites);
+      const updatedList = _.filter(e => e !== id, parsedFavorites);
+      const updatedListToString = JSON.stringify(updatedList);
+      localStorage.setItem('favorites', updatedListToString);
     }
+  };
+
+  sortSearchResults = (sortParam: string) => {
+    const sortParameters = sortParam || 'popularity.desc';
+    this.props.getMovies.movies(
+      this.state.inputValue,
+      this.state.activePage,
+      sortParameters
+    );
   };
 
   render() {
-    const { classes, data, error } = this.props;
+    const { classes, fetchedDataBundle, error } = this.props;
     const poster = 'https://image.tmdb.org/t/p/w500';
-    const { total_pages } = data.data;
+    const { total_pages } = fetchedDataBundle.data;
 
     if (error) {
       return <div>Error: {error.message}</div>;
-    } else if (!data.isLoaded) {
+    } else if (!fetchedDataBundle.isLoaded) {
       return <LinearProgress />;
     } else {
       return (
@@ -138,6 +159,18 @@ class MainPage extends Component<Props, State> {
               margin="normal"
             />
           </form>
+          <Button
+            className={classes.button}
+            onClick={this.sortSearchResults.bind(this, 'release_date.desc')}
+          >
+            Sort by year
+          </Button>
+          <Button
+            className={classes.button}
+            onClick={this.sortSearchResults.bind(this, 'vote_average.desc')}
+          >
+            Sort by rang
+          </Button>
           <Grid container className={classes.root} spacing={8}>
             <Grid item xs={12}>
               <Grid
@@ -146,7 +179,7 @@ class MainPage extends Component<Props, State> {
                 justify="center"
                 spacing={8}
               >
-                {data.data.results.map(item => (
+                {fetchedDataBundle.data.results.map(item => (
                   <Grid key={item.id} item>
                     <Card className={classes.card}>
                       <CardMedia
@@ -229,7 +262,7 @@ class MainPage extends Component<Props, State> {
 }
 
 function mapStateToProps(state) {
-  return { data: state.movies, isLoaded: state.isLoaded };
+  return { fetchedDataBundle: state.movies, isLoaded: state.isLoaded };
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<>) => {

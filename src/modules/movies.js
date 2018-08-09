@@ -36,13 +36,14 @@ export function handleErrors(error: Object) {
   return { type: MOVIE_ERROR, data: error, isLoaded: false };
 }
 
-export function movies(value: string | number, page: number) {
+export function movies(value: string | number, page: number, sort: string) {
   if (value) {
     return async (dispatch: Dispatch) => {
       try {
         const searchParams = {
           query: value,
           page: page,
+          sort_by: sort,
         };
         const movies = await api.searchAmong('multi', searchParams);
         return dispatch(receiveMovies(movies));
@@ -55,6 +56,7 @@ export function movies(value: string | number, page: number) {
       try {
         const searchParams = {
           page: page,
+          sort_by: sort,
         };
         const movies = await api.discoverMovie(searchParams);
         return dispatch(receiveMovies(movies));
