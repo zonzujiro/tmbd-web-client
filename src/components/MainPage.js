@@ -56,7 +56,7 @@ type Props = {
   classes: Object,
   error: Object,
   dispatch: Dispatch,
-  location: string,
+  location: Object,
 };
 
 type State = {
