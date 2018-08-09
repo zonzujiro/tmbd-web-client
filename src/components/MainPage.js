@@ -67,7 +67,7 @@ type State = {
 
 class MainPage extends Component<Props, State> {
   componentDidMount() {
-    const urlParamsValues = queryString.parse(this.props.location.search);
+    const urlParamsValues = queryString.parse(this.props.location.search, '?');
     this.setState({ activePage: urlParamsValues.page || 1 });
     this.props.getMovies.movies(
       null,
@@ -87,7 +87,7 @@ class MainPage extends Component<Props, State> {
 
   handleSubmit = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.preventDefault();
-    const urlParamsValues = queryString.parse(this.props.location.search);
+    const urlParamsValues = queryString.parse(this.props.location.search, '?');
     this.setState({ activePage: urlParamsValues.page });
     this.props.getMovies.movies(
       this.state.inputValue,
