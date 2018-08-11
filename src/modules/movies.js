@@ -13,7 +13,7 @@ const MOVIE_ERROR = 'MOVIE_ERROR';
 
 //TODO: add some concrete types for the state and for actions.
 
-export default function reducer(state: Object = initialState, action: Object) {
+const reducer = (state: Object = initialState, action: Object) => {
   let newState;
   switch (action.type) {
     case MOVIE_LOADING:
@@ -26,25 +26,29 @@ export default function reducer(state: Object = initialState, action: Object) {
     default:
       return state;
   }
-}
+};
 
-export function receiveMovies(json: Object) {
+export const receiveMovies = (json: Object) => {
   return { type: MOVIE_LOADED, data: json, isLoaded: true };
-}
+};
 
-export function handleErrors(error: Object) {
+export const handleErrors = (error: Object) => {
   return { type: MOVIE_ERROR, data: error, isLoaded: false };
-}
+};
 
-export function movies(value: string | number, page: number, sort: string) {
+export const movies = (
+  value: string | number,
+  page: number,
+  sortBy: string
+) => {
+  const searchParams = {
+    query: value,
+    page: page,
+    sort_by: sortBy,
+  };
   if (value) {
     return async (dispatch: Dispatch) => {
       try {
-        const searchParams = {
-          query: value,
-          page: page,
-          sort_by: sort,
-        };
         const movies = await api.searchAmong('multi', searchParams);
         return dispatch(receiveMovies(movies));
       } catch (error) {
@@ -54,10 +58,6 @@ export function movies(value: string | number, page: number, sort: string) {
   } else {
     return async (dispatch: Dispatch) => {
       try {
-        const searchParams = {
-          page: page,
-          sort_by: sort,
-        };
         const movies = await api.discoverMovie(searchParams);
         return dispatch(receiveMovies(movies));
       } catch (error) {
@@ -65,4 +65,6 @@ export function movies(value: string | number, page: number, sort: string) {
       }
     };
   }
-}
+};
+
+export default reducer;

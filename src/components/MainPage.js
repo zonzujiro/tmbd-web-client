@@ -23,7 +23,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as movies from 'modules/movies';
 
-import { Dispatch } from 'types/types';
+import { Dispatch, Action } from 'types/types';
 
 const styles = () => ({
   root: {
@@ -68,14 +68,17 @@ type State = {
 class MainPage extends Component<Props, State> {
   componentDidMount() {
     const urlParamsValues = queryString.parse(this.props.location.search, '?');
+    const defaultSortParam = 'popularity.desc';
     this.setState({ activePage: urlParamsValues.page || 1 });
     this.props.getMovies.movies(
       null,
       urlParamsValues.page || 1,
-      'popularity.desc'
+      defaultSortParam
     );
-    const favorites = localStorage.getItem('favorites') || JSON.stringify([]);
-    localStorage.setItem('favorites', favorites);
+    const favorites = localStorage.getItem('favorites');
+    if (!favorites) {
+      localStorage.setItem('favorites', JSON.stringify([]));
+    }
   }
 
   handleSearchChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -88,37 +91,38 @@ class MainPage extends Component<Props, State> {
   handleSubmit = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.preventDefault();
     const urlParamsValues = queryString.parse(this.props.location.search, '?');
+    const defaultSortParam = 'popularity.desc';
     this.setState({ activePage: urlParamsValues.page });
     this.props.getMovies.movies(
       this.state.inputValue,
       urlParamsValues.page || this.state.activePage,
-      'popularity.desc'
+      defaultSortParam
     );
   };
 
   handlePageChange = (pageNumber: number) => {
-    const { inputValue } = this.state;
-    const value = inputValue || null;
+    const { inputValue = null } = this.state;
     this.setState({ activePage: pageNumber });
-    this.props.getMovies.movies(value, pageNumber);
+    this.props.getMovies.movies(inputValue, pageNumber);
     const history = createBrowserHistory({ basename: '/' });
     history.push(`?page=${pageNumber}`);
   };
 
-  addMovieToListOfFavorites = (id: number) => {
+  addMovieToListOfFavorites = (id: number) => () => {
     const favorites = localStorage.getItem('favorites');
     if (favorites) {
       const parsedFavorites = JSON.parse(favorites);
       const duplicate = _.find(e => e === id, parsedFavorites);
       if (duplicate !== id) {
-        parsedFavorites.push(id);
-        const favToString = JSON.stringify(parsedFavorites);
-        localStorage.setItem('favorites', favToString);
+        localStorage.setItem(
+          'favorites',
+          JSON.stringify([...parsedFavorites, id])
+        );
       }
     }
   };
 
-  deleteMovieFromFavorites = (id: number) => {
+  deleteMovieFromFavorites = (id: number) => () => {
     let favorites = localStorage.getItem('favorites');
     if (favorites) {
       const parsedFavorites = JSON.parse(favorites);
@@ -128,7 +132,7 @@ class MainPage extends Component<Props, State> {
     }
   };
 
-  sortSearchResults = (sortParam: string) => {
+  sortSearchResults = (sortParam: string) => () => {
     const sortParameters = sortParam || 'popularity.desc';
     this.props.getMovies.movies(
       this.state.inputValue,
@@ -161,13 +165,13 @@ class MainPage extends Component<Props, State> {
           </form>
           <Button
             className={classes.button}
-            onClick={this.sortSearchResults.bind(this, 'release_date.desc')}
+            onClick={this.sortSearchResults('release_date.desc')}
           >
             Sort by year
           </Button>
           <Button
             className={classes.button}
-            onClick={this.sortSearchResults.bind(this, 'vote_average.desc')}
+            onClick={this.sortSearchResults('vote_average.desc')}
           >
             Sort by rang
           </Button>
@@ -217,10 +221,7 @@ class MainPage extends Component<Props, State> {
                           className={classes.button}
                           aria-label="Delete"
                           color="primary"
-                          onClick={this.deleteMovieFromFavorites.bind(
-                            this,
-                            item.id
-                          )}
+                          onClick={this.deleteMovieFromFavorites(item.id)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -228,10 +229,7 @@ class MainPage extends Component<Props, State> {
                           className={classes.button}
                           aria-label="Favorite"
                           id={item.id}
-                          onClick={this.addMovieToListOfFavorites.bind(
-                            this,
-                            item.id
-                          )}
+                          onClick={this.addMovieToListOfFavorites(item.id)}
                         >
                           <FavoriteIcon />
                         </IconButton>
@@ -265,7 +263,7 @@ function mapStateToProps(state) {
   return { fetchedDataBundle: state.movies, isLoaded: state.isLoaded };
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<>) => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     getMovies: bindActionCreators(movies, dispatch),
   };
