@@ -111,12 +111,11 @@ class MainPage extends Component<Props, State> {
   addMovieToListOfFavorites = (id: number) => () => {
     const favorites = localStorage.getItem('favorites');
     if (favorites) {
-      const parsedFavorites = JSON.parse(favorites);
-      const duplicate = _.find(e => e === id, parsedFavorites);
-      if (duplicate !== id) {
+      const hasDuplicate = _.flow([_.contains(id)])(favorites);
+      if (!hasDuplicate) {
         localStorage.setItem(
           'favorites',
-          JSON.stringify([...parsedFavorites, id])
+          JSON.stringify([...JSON.parse(favorites), id])
         );
       }
     }
